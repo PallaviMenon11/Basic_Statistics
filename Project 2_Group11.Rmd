@@ -1,0 +1,1330 @@
+---
+title: 'Project 2: Univariate and Bivariate Analysis'
+output:
+  html_document:
+    df_print: paged
+---
+*************************************************************************************************************
+*************************************************************************************************************
+# Group 11 {.tabset}
+
+## Introduction
+
+
+<center>
+![](C:\Users\palla\Desktop\DAB501\Group_Project\DAB501_Project\Acad.png)
+</center>
+
+*************************************************************************************************************
+
+<center>
+![](C:\Users\palla\Desktop\DAB501\Group_Project\Table.png)
+</center>
+
+*************************************************************************************************************
+
+**1) Load Data**
+
+```{r}
+udemy <- read.csv("Data/udemy_courses.csv")
+udemy
+```
+
+**2) Load Packages**
+
+```{r}
+library(tidyverse)
+library(here)
+library(ggplot2)
+library(ggthemes)
+library(gganimate)
+library(tidyr)
+library(dplyr)
+library(quantreg)
+library(gifski)
+library(ggpubr)
+library(gridExtra)
+library(vcd)
+library(plotly)
+library(treemapify)
+library(ggridges)
+library(viridis)
+```
+
+**3) Head of the Data**
+
+```{r}
+head(udemy)
+```
+
+**4) Tail of the Data**
+
+```{r}
+tail(udemy)
+```
+
+
+**5) Summary of the Data**
+
+```{r}
+summary(udemy)
+```
+
+
+## Pallavi Ravikumar Menon {.tabset}
+
+### 1. Univariate Analysis {.tabset}
+
+#### 1.1 Numeric Variable
+
+<style>
+div.LightSeaGreen { background-color:#22c3bb; border-radius: 5px; padding: 20px;}
+</style>
+<div class = "LightSeaGreen">
+
+**1. Create an appropriate plot to visualize the distribution of this variable. (4 marks)**
+
+</div>
+
+
+*************************************************************************************************************
+
+```{r}
+plot1 <- ggplot(udemy, aes(x=log10(num_reviews + 1))) 
+
+plot1 + geom_histogram(bins = 20,fill = "#00AFBB", alpha = 0.5)+ 
+  geom_vline(aes(xintercept= mean(log10(num_reviews + 1))), color= "#0073C2FF", size = 0.8)+
+  geom_vline(aes(xintercept= median(log10(num_reviews + 1))), linetype = "dashed", color =  "#FC4E07", size = 0.8)+
+  ggtitle("Distribution of Number Of Reviews") + 
+  labs(x = "Number of Reviews",  y = "Frequency")+ theme_minimal() + theme(plot.title = element_text (hjust = 0.5)) 
+
+```
+
+*************************************************************************************************************
+
+<style>
+div.LightSeaGreen { background-color:#22c3bb; border-radius: 5px; padding: 20px;}
+</style>
+<div class = "LightSeaGreen">
+
+**2. Consider any outliers present in the data. If present, specify the criteria used to identify them and provide a logical explanation for how you handled them.(4 marks)**
+
+</div>
+
+
+There were outliers in the variable so i have performed data transformation to get concise distribution for the variable.br></br>
+Can refer to the plot in Question 4 depicting three graphs and respective transformation.br></br>
+
+
+
+
+*************************************************************************************************************
+
+
+<style>
+div.LightSeaGreen { background-color:#22c3bb; border-radius: 5px; padding: 20px;}
+</style>
+<div class = "LightSeaGreen">
+
+**3. Describe the shape and skewness of the distribution. (2 marks)**
+
+</div>
+
+
+shape = Unimodal <br></br>
+skewness =  Right Skewed as mean > median <br></br>
+
+
+
+*************************************************************************************************************
+
+
+<style>
+div.LightSeaGreen { background-color:#22c3bb; border-radius: 5px; padding: 20px;}
+</style>
+<div class = "LightSeaGreen">
+
+**4. Based on your answer to the previous question, decide if it is appropriate to apply a transformation to your data. If no, explain why not. If yes, name the transformation applied and visualize the transformed distribution. (This video and this video may help.) (4 marks)**
+
+</div>
+
+
+
+**a)It was evident to apply data transformation in order to get perfect distribution.This is how i transformed the data :**
+
+
+```{r}
+p1 <- ggplot(udemy, aes(x=num_reviews))
+
+summary(udemy$num_reviews)
+
+summary(log10(udemy$num_reviews+1))
+
+summary(sqrt(udemy$num_reviews))
+
+
+```
+
+
+*************************************************************************************************************
+
+**b)Plot all three using "GridExtra" package to understand which distribution is ideal.**
+
+
+
+```{r}
+p1 <- qplot(x= num_reviews, data=udemy)
+p2 <- qplot(x=log10(num_reviews + 1), data = udemy)
+p3 <- qplot(x= sqrt(num_reviews), data = udemy)
+
+grid.arrange(p1,p2,p3, ncol=1)
+```
+
+
+
+
+**c)Out of all three, the second plot is ideal as it shows distribution spread out.**
+
+
+*************************************************************************************************************
+
+<style>
+div.LightSeaGreen { background-color:#22c3bb; border-radius: 5px; padding: 20px;}
+</style>
+<div class = "LightSeaGreen">
+
+**5. Choose and calculate an appropriate measure of central tendency. (3 marks)**
+
+</div>
+
+
+```{r}
+udemy %>% summarise(median(log10(num_reviews + 1)))
+```
+
+
+
+
+*************************************************************************************************************
+
+
+<style>
+div.LightSeaGreen { background-color:#22c3bb; border-radius: 5px; padding: 20px;}
+</style>
+<div class = "LightSeaGreen">
+
+**6. Explain why you chose this as your measure of central tendency. Provide supporting evidence for your choice. (4 marks)**
+
+</div>
+
+
+Median is ideal for the above chart because:<br></br>
+
+For distributions have skewness and outliers. median is preferred measure of central tendency because the median is least affected by outliers.<br></br>
+As seen from the graph, the mean value is pulled towards the direction of skewness.<br></br>
+This potrays that mean gets affected by skewness or outliers.<br></br>
+
+
+
+
+*************************************************************************************************************
+
+
+<style>
+div.LightSeaGreen { background-color:#22c3bb; border-radius: 5px; padding: 20px;}
+</style>
+<div class = "LightSeaGreen">
+
+**7. Choose and calculate a measure of spread that is appropriate for your chosen measure of central tendency. Explain why you chose this as your measure of spread. (2 marks)**
+
+</div>
+
+
+
+```{r}
+udemy %>% summarise(IQR(log10(num_reviews + 1)))
+```
+
+The range gives us a measurement of how spread out the entirety of our data set is. The interquartile range, which tells us how far apart the first and third quartile are, indicates how spread out the middle 50% of our set of data is.
+The primary advantage of using the interquartile range rather than the range for the measurement of the spread of a data set is that the interquartile range is not sensitive to outliers.
+
+
+
+
+
+#### 1.2 Categorical Variable
+
+
+<style>
+div.LightSeaGreen { background-color:#22c3bb; border-radius: 5px; padding: 20px;}
+</style>
+<div class = "LightSeaGreen">
+
+**1. Create an appropriate plot to visualize the distribution of counts for this variable. (4 marks)**
+
+</div>
+
+
+
+```{r}
+plot2 <- udemy %>% group_by(subject) %>% 
+         summarize(count = n()) %>%
+         plot_ly(labels = ~subject , values = ~count) %>%
+         add_pie(hole=0.6) %>%
+         layout(title = "Distribution of Count for Subjects",showlegend = F,
+                xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+                yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+plot2
+
+
+```
+
+
+*************************************************************************************************************
+
+
+
+<style>
+div.LightSeaGreen { background-color:#22c3bb; border-radius: 5px; padding: 20px;}
+</style>
+<div class = "LightSeaGreen">
+
+**2. Create an appropriate plot to visualize the distribution of proportions for this variable. (4 marks)**
+
+</div>
+
+
+
+
+```{r}
+ggplot(udemy, aes(subject, fill = subject)) + 
+  geom_bar(stat = "count") + coord_flip()+
+  ggtitle("Distribution of proportions for Subjects") + 
+  labs(x = "Frequency",  y = "Types of Subjects", fill = "Subjects")+ theme_minimal() + theme(plot.title = element_text (hjust = 0.5)) 
+```
+
+
+*************************************************************************************************************
+
+
+
+<style>
+div.LightSeaGreen { background-color:#22c3bb; border-radius: 5px; padding: 20px;}
+</style>
+<div class = "LightSeaGreen">
+
+**3. Discuss any unusual observations for this variable? (2 marks)**
+
+</div>
+
+
+Observing both the graph there doesn't seem to be unusual observation infact it clearly gives out the message to the observer.<br></br>
+Both the graph successfully generates valuable insights.<br></br>
+
+
+
+
+*************************************************************************************************************
+
+
+<style>
+div.LightSeaGreen { background-color:#22c3bb; border-radius: 5px; padding: 20px;}
+</style>
+<div class = "LightSeaGreen">
+
+**4. Discuss if there are too few/too many unique values? (2 marks)**
+
+</div>
+
+
+There are no unique values affecting the observations.<br></br>
+Both the graph is consice and accurate.<br></br>
+
+
+
+
+### 2. Bivariate Analysis {.tabset}
+
+#### 2.1 Plot 1
+
+
+<style>
+div.LightSeaGreen { background-color:#22c3bb; border-radius: 5px; padding: 20px;}
+</style>
+<div class = "LightSeaGreen">
+
+**1. Create an appropriate plot to visualize the relationship between the two variables, where both are numeric. (4 marks)**
+
+</div>
+
+
+
+```{r}
+ggplot(udemy, aes(price,num_lectures)) +
+  geom_bin2d(bins = 20, color ="white")+
+  scale_fill_gradient(low =  "#00AFBB", high = "#FC4E07")+
+  ggtitle("Relationship between two numerical values") + 
+  labs(x = "Price",  y = "Number of Lectures")+ theme_minimal() + theme(plot.title = element_text (hjust = 0.5)) 
+  
+```
+
+
+
+*************************************************************************************************************
+
+<style>
+div.LightSeaGreen { background-color:#22c3bb; border-radius: 5px; padding: 20px;}
+</style>
+<div class = "LightSeaGreen">
+
+**2. Describe the form, direction, and strength of the observed relationship. Include both qualitative and quantitative measures, as appropriate. (4 marks)**
+
+</div>
+
+
+
+The graph depicts alternative to scatter plot using "geom_bin2d" plot.<br></br>
+The number of lectures are plotted against the course price respectively.<br></br>
+This depicts a moderately strong relationship which is positive as we see the number of lectures increases with increase in the course price. There are few outliers and exceptions in the graph.<br></br>
+
+
+
+
+
+*************************************************************************************************************
+
+<style>
+div.LightSeaGreen { background-color:#22c3bb; border-radius: 5px; padding: 20px;}
+</style>
+<div class = "LightSeaGreen">
+
+**3. Explain what this relationship means in the context of the data. (4 marks)**
+
+</div>
+
+
+As per the context it surely successfully depicts the relationship between both the numerical variable.<br></br>
+Looking at the graph the viewer can estimate there is direct proportionality between two variables.<br></br>
+
+
+
+
+
+*************************************************************************************************************
+
+<style>
+div.LightSeaGreen { background-color:#22c3bb; border-radius: 5px; padding: 20px;}
+</style>
+<div class = "LightSeaGreen">
+
+**4. Describe the variability that you observe in the plot and how that corresponds to the strength you calculated in #2 above. (3 marks)**
+
+</div>
+
+
+There seems to be some variations and exception in the plot. Some lower price values depicts largest count in terms of number of lectures which goes contradictory to our observation.<br></br> 
+Also there are outliers present in the plot which surely distracts us from accurate observation.<br></br>
+
+
+#### 2.2 Plot 2
+
+
+<style>
+
+div.LightSeaGreen { background-color:#22c3bb; border-radius: 5px; padding: 20px;}
+</style>
+<div class = "LightSeaGreen">
+
+**1. Create an appropriate plot to visualize the relationship between the two variables,where one variable is categorical and the other is numeric (4 marks)**
+
+</div>
+
+
+```{r}
+ggplot(udemy, 
+       aes(x = price, 
+           y = level, 
+           fill = level)) +
+  geom_density_ridges() + 
+  theme_ridges() +
+  theme(legend.position = "none")+
+  labs(title = "Relationship between numeric and categorical",
+       x = "Prices",
+       y = "Course Levels", fill = "Levels")+
+  theme_minimal()+ theme(plot.title = element_text (hjust = 0.5))
+```
+
+
+
+
+*************************************************************************************************************
+
+<style>
+div.LightSeaGreen { background-color:#22c3bb; border-radius: 5px; padding: 20px;}
+</style>
+<div class = "LightSeaGreen">
+
+**2. Describe the form, direction, and strength of the observed relationship. Include both qualitative and quantitative measures, as appropriate. (4 marks)**
+
+
+</div>
+
+
+The graph depicts the relationship between the levels of each subject with respect to the prices.<br></br>
+The chart depicts a strong relationship between both the variables as we can see peak rise and fall for different levels of course for a defined price range. We can observe and conclude an understanding between both the variables.<br></br>
+
+
+
+*************************************************************************************************************
+
+<style>
+div.LightSeaGreen { background-color:#22c3bb; border-radius: 5px; padding: 20px;}
+</style>
+<div class = "LightSeaGreen">
+
+**3. Explain what this relationship means in the context of the data. (4 marks)**
+
+</div>
+
+
+
+It clearly justifies that for price range 0-50$ there ar more courses for Intermediate and Beginner Level.
+Further, observing different price range we can clearly understand the count and demand for each evel of course.<br></br>
+
+
+
+*************************************************************************************************************
+
+<style>
+div.LightSeaGreen { background-color:#22c3bb; border-radius: 5px; padding: 20px;}
+</style>
+<div class = "LightSeaGreen">
+
+**4. Describe the variability that you observe in the plot and how that corresponds to the strength you calculated in #2 above. (3 marks)**
+
+</div>
+
+There is no such variability observed or that could affect the insight that we conclude from the visualization.<br></br>
+However, there can be further breakdown to understand price range of 100-150$ as it doesn't give a clear picture for all levels.<br></br>
+
+
+
+
+## Akshay Joshi 
+
+**Univariate Analysis**
+</br>
+***Univariate plot 1***
+```{r}
+udemy_bar1 <- ggplot(udemy, aes(x = price)) 
+udemy_bar1 + geom_histogram(binwidth = 20,color = "darkslategray",
+                       fill = "lightblue") + ggtitle("Course content duration in Udemy") + 
+  labs(x = "Price", y = "Number of lectures") + 
+  geom_vline(aes(xintercept = median(num_lectures)),color = "blue", size = 1) +
+  geom_vline(aes(xintercept = mean(num_lectures)),color = "red", 
+             linetype = "dashed", size = 1)
+
+```
+</br>
+
+<style>
+div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 20px;}
+</style>
+<div class = "blue">
+
+The plot above tells us the distribution of prices with respect to the number
+of lectures pertaining to those prices. As the plotted histogram is not
+heavily skewed justifies that there are no potential outliers present in
+the data. Also upon visualization the graph is right skewed and as mean
+is higher than the median justifies the same. The plot does not require any transformation since the tail of the histogram can be seen properly. Here the blue line is depicting the median and red line depicts mean.
+</div>
+</br>
+
+<style>
+div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 20px;}
+</style>
+<div class = "blue">
+Central Tendency - I chose mean as my central tendency since for our given plot the mean is greater than the median and also since our price variable contains exact values instead of appropriate ones.
+</div>
+```{r}
+mean(udemy$price)
+```
+
+</br>
+
+<style>
+div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 20px;}
+</style>
+<div class = "blue">
+As our graph is right skewed so the best way to measure spread is by calculating the Inter-Quartile Range
+</div>
+
+```{r}
+IQR(udemy$price)
+```
+</br>
+
+<style>
+div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 20px;}
+</style>
+<div class = "blue">
+The shape of the distribution is unimodal and it is right/positive skewed.
+</div>
+</br>
+
+**Univariate plot 2**
+</br>
+
+***Proportion wise***
+
+```{r}
+udemy_bar2.1 <- ggplot(udemy, aes(x = year, y = ..prop..,group = 1),stat='count') 
+udemy_bar2.1 + geom_bar(color = "darkslategray", fill = "lightblue") +
+  ggtitle("Courses made according to each year in proportions") + 
+  labs(x = "Year", y = "Proportion")
+```
+</br>
+
+***Count wise***
+
+```{r}
+udemy_bar2.2 <- ggplot(udemy, aes(x = year)) 
+udemy_bar2.2 + geom_bar(color = "darkslategray", fill = "lightblue") +
+  ggtitle("Courses made in each year") + 
+  labs(x = "Year", y = "Number of Courses made")
+```
+</br>
+```{r}
+udemy %>% count(year)
+```
+</br>
+
+<style>
+div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 20px;}
+</style>
+<div class = "blue">
+We can observe that over the years till 2016 more and more courses were made for the masses. However the number of courses decreased in 2017 as compared to 2016. I also have counted the number of courses in each year to determine the exact pattern in the data. I have in total of 7 unique values which signifies a considerable amount to show trend of a data.
+</div>
+
+</br>
+**Bivariate Analysis**
+</br>
+
+**Bivariate plot 1**
+
+```{r}
+udemy_bar3_filter <- udemy %>% 
+  mutate(review_filter = num_reviews, lecture_filter = num_lectures) %>%
+  filter(review_filter < 200, lecture_filter < 200)
+
+udemy_bar3 <- ggplot(udemy_bar3_filter, aes(x = lecture_filter, y = review_filter))
+udemy_bar3 + geom_point(aes(color = subject),alpha = 0.8) + 
+  geom_smooth(method = lm, linetype = "dashed")+ coord_flip() +
+  ggtitle("Number of lectures with it's reviews for first 200 courses") + 
+  labs(x = "Number of lectures", y = "Number of reviews", fill = "Subjects")
+```
+</br>
+
+```{r}
+cor(udemy_bar3_filter$lecture_filter,
+    udemy_bar3_filter$review_filter)
+```
+
+</br>
+<style>
+div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 20px;}
+</style>
+<div class = "blue">
+The scatterplot shows a weak and non-linear association between number of lectures and reviews as the coefficient of correlation calculated above is close to 0. The direction of the plot is neither positive nor negative. It depicts how many reviews are available corresponding to the number of lectures in each course. As we can see the smooth dotted curve is more towards number of lectures representing that more the number of lectures lesser are the reviews. 
+</div>
+
+</br>
+
+**Bivariate plot 2**
+
+```{r}
+udemy_subscribers <- udemy %>% 
+  mutate(subs_filter = num_subscribers) %>%
+  filter(subs_filter < 300)
+
+udemy_bar4 <- ggplot(udemy_subscribers, aes(x = is_paid, y = log(num_subscribers + 1)))
+udemy_bar4 + geom_boxplot(color="indianred",fill="sienna2") +
+  ggtitle("Number of subscribers paying for courses") + 
+  labs(x = "Paid or not", y = "Number of subscribers")
+```
+</br>
+<style>
+div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 20px;}
+</style>
+<div class = "blue">
+It seems that there are more users on udemy opting for the free courses
+rather than paid ones. The form, strength and direction cannot be calculated as one of the variable is boolean data which is non-numeric. 
+</div>
+
+
+
+## Nivetha Ravi
+
+
+##Univariate Analysis##
+
+
+##Numeric variable##
+
+
+##1. Create an appropriate plot to visualize the distribution of this variable##
+```{r}
+UM<-ggplot(udemy, aes(x = price)) +
+  geom_bar( color = "orange") +
+  labs(x = "Price of Each Course(In Dollars)",
+       y = "Count",
+       title = "Distribution of prices for each course") +
+  theme_minimal()
+ggplotly(UM)
+```
+
+
+##2.Consider any outliers present in the data. If present, specify the criteria used to identify them and provide a logical explanation for how you handled them##
+ 
+  There is no outliers in this graph as the price of each course are distributed randomly within 200$.
+
+##3.Describe the shape and skewness of the distribution##
+ 
+  The graph is Unimodel and it is highly right-skewed
+
+
+##4.Based on your answer to the previous question, decide if it is appropriate to apply a transformation to your data. If no, explain why not. If yes , name the transformation applied and visualize the transformed distribution##
+ 
+ As the data distribution is not extremely skewed there is no need to to apply transformations to the current data as there are valid data point from the visualization displaying the data points.
+
+ If we apply a transformation to this data the visualization might look good to view. However, it might be difficult to interpret as the log of a measured value is usually meaningless and we will not be able to view the data points and the actual data trends from the visualization.
+
+
+
+##5.. Choose and calculate an appropriate measure of central tendency##
+
+As the data distribution is skewed, it is recommended to use ‘Median’ to calculate the Central tendency.
+
+```{r}
+median(udemy$price)
+```
+
+
+##6.Explain why you chose this as your measure of central tendency. Provide supporting evidence for youe choice##
+
+```{r}
+avg_price = mean(udemy$price)
+median_price = median(udemy$price)
+ggplot(udemy, aes(x = price)) +
+  geom_bar(stat = "bin", fill = "steelblue") +
+  labs(x = "Priceof each course",
+       y = "Count",
+       title = "Distribution of price for each course") +
+  theme_minimal() +
+  geom_vline(xintercept = avg_price,
+             color = 'red',
+             size = 1.5) +
+  geom_vline(xintercept = median_price,
+             color = 'blue',
+             size = 1.5)
+```
+```{r}
+udemy %>%
+  summarise(
+    mean = mean(price),
+    median = median(price),
+    std_dev = sd(price),
+    IQR = IQR(price)
+  )
+```
+ 
+  It is clearly visible from both the plot and statistics, the graph is rightly skewed and the mean is higher than the median for this variable.For variables with such behaviour, median is more appropriate compared to mean.
+  
+
+
+##7.Choose and calculate a measure of spread that is appropriate for your chosen measure of central tendency. Explain why you chose this as your measure of spread.
+
+```{r}
+IQR(udemy$price)
+```
+
+The central tendancy value as per the above calculation is 75.  The graph is rightly skewed and the mean is higher than the median for this variable.For variables with such behaviour, IQR is more appropriate to calculate the spread compared to standard deviation. 
+
+
+
+
+##CATEGORICAL VARIABLE##
+
+
+
+##1. Create an appropriate plot to visualize the distribution of counts for this variable## 
+
+```{r}
+ggplot(udemy, aes(y = level, fill = factor(level)))+geom_bar()+labs(x = "Count",
+       y = "Levels",title = "Distribution of counts for each level"  )
+```
+
+
+##2.Create an appropriate plot to visualize the distribution of proportions for this variable.
+
+```{r}
+ggplot(udemy , aes(y = level , x = ..prop.., group = 1), stat = 'count') + geom_bar(fill = 'indianred' , colour = 'black')+labs(x = "Proportions",
+       y = "Levels",title = "Distribution of proportion for each level")
+```
+
+
+##3.Discuss any unusual observations for this variable?
+
+```{r}
+udemy %>% group_by(level) %>% summarise(n=n()) %>% mutate(prop=n/sum(n))
+```
+
+There are few unusual observations as seen above that All Levels has 1927 and the expert level is only 57 which is the lowest one among the levels.
+  
+
+##4.Discuss if there are too few/too many unique values?
+
+```{r}
+unique(udemy$level)
+```
+
+There are unique values in All Levels followed by intermediate level.
+   
+
+
+##BIVARIATE ANALYSIS
+
+
+
+##TWO NUMERIC VARIABLE##
+
+
+
+##1.Create an appropriate plot to visualize the relationship between the two variables##
+
+```{r}
+ggplot(udemy,aes(price,num_lectures,colour = "RED"))+geom_quantile()+geom_smooth(colour = "Black")+
+  labs(x= "Price" , y= "Number of Lectures",title = "Price for Each Number of Lectures")
+
+```
+##2.Describe the form, direction, and strength of the observed relationship. Include both qualitative and quantitative measures, as appropriate##
+
+```{r}
+cor(udemy$price , udemy$num_lectures)
+```
+
+From the correlation summary and plot, it is visible that there is a strong correlation between num_lectures and price.
+
+
+##3.Explain what this relationship means in the context of the data##
+
+ From the above plot, we can see that the price gradually increases when the number of lectures increases
+
+
+##4.Describe the variability that you observe in the plot and how that corresponds to the strength you calculated in #2 above##
+
+ The variability I can see here is though the price increases according  to the number of lectures there is also free course which has respective content duration. Also, between the price 100 to 150 dollars the number of lectures decreases and then the price gradually increases. This variation has contributed to increasing the strength of relationship between price and number of lectures as it may decrease or increase.
+
+
+
+
+##ONE NUMERIC AND ONE CATEGORICAL VARAIBLE##
+
+
+
+##1.Create an appropriate plot to visualize the relationship between the two variables##
+
+```{r}
+UM<-ggplot(udemy,aes(x = year, y = price , color = factor(year)))+geom_jitter()+labs(x = "Price",
+       y = "Year",title = "Relationship between Price and Year")
+ggplotly(UM)
+```
+
+##2.Describe the form, direction, and strength of the observed relationship. Include both qualitative and quantitative measures , as appropriate##
+
+ There is no certain relationship between these two variables.Both variables are independent of each other. so, we cannot calculate quantitative measures like correlation and covariance for any pair of variables where one of the variables is categorical variable.
+
+
+##3.Explain what this relationship means in the context of the data##
+   
+   From the above jitter  plot it can be seen that as the year goes by the price also increases.
+   
+
+##4.Describe the variability that you observe in the plot and how that corresponds to the strength you calculated in #2 above##
+  
+  We cannot determine the variability with a covariance between the variables 'price' and 'year' as one variable is Numeric and the other is Categorical and these variables are independent of each other.                      
+
+
+
+## Yash Bhavsar
+
+**1) Univariate Analysis**
+
+**1.1) Univariate Analysis for numeric variable:-** 
+
+1) Create an appropriate plot to visualize the distribution of numeric variable.
+
+```{r}
+ggplot(udemy, aes(x = price,fill = level))+
+  geom_density( alpha = 0.5)+
+  facet_wrap(~level)+
+  geom_vline(xintercept = mean(udemy$price), colour = 'red',size = 1)+
+  geom_vline(xintercept = median(udemy$price), colour = 'Blue', size = 1)+
+  labs( y = "Density", x = "Price of Course", fill = "Level of Subject", title= "Distribution of Numeric Variable")
+
+```
+
+2) No, there is no outliers present in my data as all the prices are equally divided throughout all the levels of courses.  
+
+3) The distribution is Right Skewed as it has long tail extending towards right. Also we can say for some levels the distribution  is Bimodal as we do not have any outliers.   
+
+4) No, We do not need to apply any type of transformation as we have used a density plot,the distribution is clearly visible however, if we use histogram plot then transformation might be needed.  
+
+```{r}
+summary(udemy$price)
+```
+
+
+5) Mean = 66.09, median = 45.00 Median is selected as central Tendency.    
+
+6) As we can see in the plots the median value is less than mean value and almost half of the data is on the other side of median so it is preffered to use Median for filling up in null values and it consider as a central tendency value as our data is not symmetric/ skewed.  
+
+```{r}
+sd(udemy$price)
+IQR(udemy$price)
+var(udemy$price)
+```
+
+7) As data/Plot is right skewed we will use IQR as measure of spread that is appropriate for chosen measure of central tendency.
+
+  
+**1.2) Categorical variable univarient analyasis**
+  
+1) Create an appropriate plot to visualize the distribution of counts for Categorical variable.   
+```{r}
+ggplot(udemy, aes(x = subject, fill = is_paid))+
+  geom_bar()+
+  labs( y = "Number of Students Enrolled", x = "Subjects", fill = 'Subject is Paid',title= "Distribution of Counts")
+
+```
+
+2) Create an appropriate plot to visualize the distribution of proportions for Categorical variable. 
+```{r}
+ggplot(udemy, aes(x = subject,y = ..prop..,group = 1),stat = 'count')+
+  geom_bar(colour = 'black',fill = "pink")+
+  labs( y = "Proportion of Students Enrolled", x = "Subjects",title= "Distribution of Categorical Variable")
+```
+
+
+3) Here the observation for the distribution count is that more and more paid courses been selected and the plot is bimodal as it has two peaks for enrolled students.   
+
+4) There are very less unique values as the data is evenly distrusted.  
+
+
+**2) Bivariate Analysis** 
+  
+**2.1) pair of variables where both are numeric.**
+
+1) Create an appropriate plot to visualize the relationship between the two variables.
+```{r}
+ggplot(udemy, aes (x = price, y = content_duration,fill = is_paid, colour = is_paid))+
+  geom_point(alpha = 0.3)+
+  geom_smooth(method = 'lm')+
+  labs( y = "Duration of Content", x = "Price",fill = 'Subject is Paid',colour = 'Subject is Paid',title= "Distribution of Content Vs Price")
+```
+
+
+```{r}
+cor(udemy$price,udemy$content_duration)
+```
+
+2) It is seen that the relation is liner as the price increases the content duration also increases.As seem from the correlation function the the price and content duration is on the weaker side as we can see from the plot.  
+
+3) As we can see that the free courses care having maximum 20 hours of content while when price is gradually increases the duration also increases but still the price and duration cannot give a specific co relation as we have some subjects which are at much higher price and have low content duration as they are at expert level.  
+
+4) The variability I observed is  positive weak linear relation as we calculated the corelation which was also too low at 0.29.    
+    
+  
+**2.2) Pair of variables where one variable is categorical and the other is numeric.**  
+  
+1) Create an appropriate plot to visualize the relationship between the two variables.  
+```{r}
+ggplot(udemy, aes (y = price, x = subject, fill = subject))+
+  geom_boxplot()+
+  labs( y = "Cost of Subjects", x = "Subjects",fill = 'Subjects',title= "Subjects Vs Price")
+
+```
+
+2) It seems that there is non linear relation as the cost is not stagenet for each subjects, however the median cost is also varried upon the subjects. Also there are more potential outliers for subject Musical instruments and Graphic Design Compared with Business Finance and Web Development. Also it is seen that the highest paid courses are from all the subjects considering the outliers.  
+
+3) It is seen that the most popular subjects are Business finance and Web development as they have all types of courses from variety of price and level. This relation is Obviously non linear as here is not specific growth in th boxplots but if we see the median all the medians are in a strong Linar Relation with cost and subjects.  
+
+4) As we cannot calculate correlation coefficient for a numeric and Categorical values we only have to observe the box plot but it is clear seen that our plot is non linear in an u shape but the median are strongly related in positive direction as medial of all subjects with price is around 50.
+
+
+## Bhupesh Reddy Challa
+
+<h4>Loading libraries</h4>
+
+```{r  warning=FALSE,message=FALSE}
+library(tidyverse)
+library(dplyr)
+library(here)
+library(ggplot2)
+library(quantreg)
+```
+
+
+<h4>Loading data </h4>
+
+```{r warning=FALSE,message=FALSE}
+
+uc_df <- read.csv("Data/udemy_courses.csv")
+
+head(uc_df)
+
+```
+
+<h4> Viewing data</h4>
+
+```{r  warning=FALSE,message=FALSE}
+
+glimpse(uc_df)
+
+```
+
+<h4> Data mutated below added additional variables.</h4>
+
+
+<h3>UNIVARIANT 1 NUMERIC DATA</h3>
+
+
+
+
+```{r  warning=FALSE,message=FALSE}
+summary(uc_df$num_reviews)
+```
+
+<h4>Number of reviews </h4>
+
+<h4>1. Create an appropriate plot to visualize the distribution of this variable. </h4>
+
+
+```{r  warning=FALSE,message=FALSE}
+p <- ggplot(uc_df,mapping = aes(num_reviews)) + geom_histogram(bins = 30)+
+  labs(x="Reviews", y="Count",title = "Number of reviews")
+ p
+
+
+```
+
+
+<h4>2. Consider any outliers present in the data. If present, specify the criteria used to identify them and provide a logical explanation for how you handled them.</h4>
+<h4>
+- The data is extremely skewed for few of the reviews it can be considered as a correct data. 
+
+- The reviews count can not be removed as a outliers because the number of reviews provided the larger information on the opinion of the course.
+
+- Inorder to extract much more information from the graph we need to transform it.
+
+- We can not visualize from the plotted histogram as there is very less to study from the plot.
+</h4>
+
+<h4>3. Describe the shape and skewness of the distribution. </h4>
+
+<h4>- Its unimodal and right skewed. </h4>
+
+<h4>4. Based on your answer to the previous question, decide if it is appropriate to apply a transformation to your data. If no, explain why not. If yes, name the transformation applied and visualize the transformed distribution.</h4>
+
+<h4>- Yes it is needed to transform the data for revealing more information from the plot.</h4>
+
+<h4>- Applied transformation is log10, it gave the broader scope of the data.</h4>
+
+<h4><b>Below plot shows the transformed data.</b></h4>
+
+```{r  warning=FALSE,message=FALSE}
+
+
+c <- ggplot(uc_df,mapping = aes(log10(num_reviews+1))) + geom_histogram(bins = 30L ,alpha=0.6)
+
+c + theme_grey()+labs(x="Reviews", y="Count",title = "Number of reviews")
+
+```
+
+<h4>5. Choose and calculate an appropriate measure of central tendency.</h4>
+
+```{r  warning=FALSE,message=FALSE}
+
+
+mean <- mean(log10(uc_df$num_reviews+1))
+
+median <- median(log10(uc_df$num_reviews+1)) 
+
+diff_mean_median <- mean-median
+
+diff_mean_median
+```
+
+<h4>- As the variation between mean and median is minute we can say that the histogram is symmetric.</h4>
+
+
+```{r  warning=FALSE,message=FALSE}
+
+
+c <- ggplot(uc_df,mapping = aes(log10(num_reviews+1))) + geom_histogram(bins = 30L ,alpha=0.6)
+
+
+cv <- c+ geom_vline(aes(xintercept=mean(log10(num_reviews+1))), color="1", linetype="dashed", size=1) +   
+  geom_vline(aes(xintercept=median(log10(num_reviews+1))), color="6", linetype="dashed", size=1)
+
+cv + theme_grey()+labs(x="Reviews(log10)", y="Count",title = "Number of reviews")
+
+  
+  
+
+```
+
+<h4>6. Explain why you chose this as your measure of central tendency. Provide supporting evidence for your choice.</h4>
+<h4>
+- I have selected mean as the central tendency because it is calculated by the all observations values of data. For a symmetric plot considering mean value is prefered.  </h4>
+
+
+<h4>7. Choose and calculate a measure of spread that is appropriate for your chosen measure of central tendency. Explain why you chose this as your measure of spread. (2 marks)</h4>
+
+
+```{r  warning=FALSE,message=FALSE}
+
+std_num_reviews <- sd(log10(uc_df$num_reviews+1))
+
+std_num_reviews
+
+
+```
+
+<h4>- As the histogram is symmetric i have used the standard deviation as the measure of spread.</h4>
+
+
+
+<h3>UNIVARIANT 1 CATEGORICAL VARIABLE</h3>
+
+
+<h4>1. Create an appropriate plot to visualize the distribution of counts for this variable.</h4>
+
+
+```{r  warning=FALSE,message=FALSE}
+
+ggplot(uc_df, mapping = aes(is_paid,fill=is_paid))+geom_bar()+
+  labs(x="Is Paid", y="Count",title = "Number of Paid")+
+  theme_minimal()
+
+```
+
+
+<h4>2. Create an appropriate plot to visualize the distribution of proportions for this variable.</h4>
+
+
+```{r  warning=FALSE,message=FALSE}
+uc_df_mt <- uc_df %>% group_by(is_paid)
+
+ggplot(uc_df_mt, mapping = aes(factor(is_paid),y=..prop..,group =1))+ geom_bar(stat = "count",fill="blue",alpha=0.4)+
+  labs(x="Is Paid", y="Proportions",title = "Proportions of Paid Values")+
+  geom_text(aes(label=..prop..),stat="count",position = position_dodge(0.9), vjust=-0.5)
+
+```
+
+<h4>- The proportions of the paid and unpaid courses are shown in above graph.</h4>
+
+<h4>3. Discuss any unusual observations for this variable?</h4>
+
+<h4>- This variable does not have any unusual observations, it is proportionately distributed for TRUE and FALSE cases. displaying the percentage based on data.</h4>
+
+
+<h4>4. Discuss if there are too few/too many unique values?</h4>
+
+<h4>- There are zero unique values, this variable contains only two types one is True for the courses that are for cost and False for the courses which are free of cost.</h4>
+
+
+
+<h3>BIVARIANT ANALYSIS</h3>
+
+
+<h4>1. Create an appropriate plot to visualize the relationship between the two variables.</h4>
+
+
+<h4>Pair of numeric variables relationship.</h4>
+
+<h4>Considered two numeric variables "sales" and "num_lectures", sales variable was created from price and number of subscribers for a particular course.</h4>
+
+
+<h4>Created a new variable sales using mutate function.</h4>
+
+```{r warning=FALSE,message=FALSE}
+
+uc_df_mut_sales <- uc_df %>% mutate(sales=uc_df$price*uc_df$num_subscribers)
+
+
+```
+
+
+```{r message=FALSE,warning=FALSE, fig.width=10,fig.height=5 }
+
+ggplot(uc_df_mut_sales, aes(log10(sales+1),log10(num_lectures+1))) + 
+  geom_point(alpha=0.4)+geom_smooth(color="red") + 
+  labs(x="Sales (log10 scale)",y="Number of lectures (log10 scale)", title="The number of lectures for sales")
+
+```
+<h4>
+- As the plot is too compact there will be difficulty in visuvalizing the plot, so the sales value has been plotted in log10 scale so that we could depict the scatter plot and  analyze the trends.
+</h4>
+
+<h4>
+2. Describe the form, direction, and strength of the observed relationship. Include both qualitative and quantitative measures, as appropriate. </h4>
+
+<h4>Qualitative</h4>
+<h4>
+The below details are observered from the plot.
+</h4>
+<h4>- Form is alomst linear.</h4>
+
+<h4>- Direction is positive.</h4>
+
+<h4>- Strength is very weak.</h4>
+
+<h4>
+Also consists of many outliers in this scenario.
+</h4>
+<h4>Quantitative</h4> 
+
+<h4>Correlation between two variables(sales and number of lectures)</h4>
+
+
+```{r warning=FALSE,message=FALSE}
+
+cor(uc_df_mut_sales$sales,uc_df_mut_sales$num_lectures)
+
+```
+
+<h4>
+3. Explain what this relationship means in the context of the data. (4 marks)
+</h4>
+<h4>
+- The relationship between the two variables are linear, the courses which are free of cost have a number of lectures ranging  from 100-200 and courses with price have a different trend i.e for the higher sales of the course majority of the courses have 100 to 200 lectures. Furthermore when sales has crossed "4" of log10 scale the lectures count increased.
+</h4>
+<h4>- Finally there is no clear pattern to define the relationship between these two variables as the data points are scattered rather than being on the smooth line.</h4>
+
+<h4>- We can define the form to be linear as there is a increasing curve i.e as the number of lectures increases sales tends to increase.</h4>
+<h4>
+- As we can see from the plot this relationship of variables is very weak, the points are scattered and most of the points are far away from the smooth curve. </h4>
+
+<h4>4. Describe the variability that you observe in the plot and how that corresponds to the strength you calculated in #2 above. </h4>
+<h4>
+- As we can see from the plot this relationship of variables is very weak, the points are scattered and most of the points are far away from the smooth curve which will make the relationship weaker. The points spread away from the smooth line is also broader which makes it weak relationship.</h4>
+
+
+<h4>- The correlation value also shows the same that the correlation value between the two variables is 32% which is too less. 
+
+- Direction is also shown as positive in both quantitatively and qualitatively.</h4>
+
+
+
+<h3>One numeric and one categorical variable.</h3>
+<h4>
+1. Create an appropriate plot to visualize the relationship between the two variables.</h4>
+
+
+<h4>
+plotting the visualization between sales(numeric) and level(categorical).</h4>
+
+```{r warning=FALSE,message=FALSE, , fig.width=10,fig.height=5}
+
+ggplot(uc_df_mut_sales, aes(log10(sales+1),level)) +
+  geom_boxplot(aes(fill=level),outlier.shape = 9)+
+   stat_summary(fun = base::mean, geom = "point", color ="red", size = 4)+ theme_bw()+
+    labs(x=" Total sales  ",y= "Levels",title = "Sales for each level")
+
+
+
+```
+
+
+<h4>- The All levels have a higher median value amongst all other levels and the lowest is for beginner level.</h4>
+<h4>
+- based on the boxplot for level wise all the level data are left skewed.
+
+- There are outliers represented in different shape. they exist in all levels and Intermediate level categories.
+
+</h4>
+
+```{r warning=FALSE,message=FALSE}
+
+median(log10(uc_df_mut_sales$sales))
+
+mean(log10(uc_df_mut_sales$sales+1))
+
+```
+
+
+<h4>2. Describe the form, direction, and strength of the observed relationship. Include both qualitative and quantitative measures, as appropriate.
+</h4>
+
+**Quantitative measures**
+
+
+```{r warning=FALSE,message=FALSE}
+
+median_sales <- median(log10(uc_df_mut_sales$sales+1))
+mean_sales <- mean(log10(uc_df_mut_sales$sales+1))
+
+
+mean_sales-median_sales
+
+
+```
+<h4>
+Median is greater than mean so that means the skewness is towards left.
+
+</h4>
+**<h4>Qualitatively</h4>**
+
+<h4>
+- The boxplot provides the variations in median and mean values from the each level for understanding the skewness. median is greater than mean.
+
+- Beginner level have the highest number of sales and the least is for expert level.
+
+- Outliers exist for All levels and Intermediate courses.
+
+</h4>
+<h4>3. Explain what this relationship means in the context of the data. </h4>
+<h4>
+
+- From the graph we can say that the median is always greater for all the levels in total sales.
+
+- Beginner level have the most data values and second is for the intermediate level. However we can see that for expert value the mean and median is almost near to each other. Which means that data is uniform for the expert level courses.
+</h4>
+
+<h4>4. Describe the variability that you observe in the plot and how that corresponds to the strength you calculated in #2 above.</h4>
+
+<h4>
+- The categorical and numeric value relationship can not be defined with a relationship of correlation. This can be done by using other test such as t-test,z-test and ANOVA test.
+
+- However the mean and median values plotted in the graph and the quantitative values have produced same outputs there is no variability in the observations.
+
+</h4>
+
+
+
+
+                                               ***THE END ***
+
+
+
+
+
+
+
+
+
+
+
+
+

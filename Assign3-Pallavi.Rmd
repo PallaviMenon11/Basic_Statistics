@@ -1,0 +1,371 @@
+---
+title: "DAB 501 - Assignment 3"
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+---
+
+*************************************************************************************************************
+*************************************************************************************************************
+# Pallavi Ravikumar Menon (W0773763) {.tabset}
+
+## About the Dataset
+
+**1) Load the data**
+```{r}
+df <- read.csv("pokemon.csv")
+```
+
+**2) Head of the Data**
+```{r}
+head(df)
+```
+
+**2) Tail of the Data**
+```{r}
+tail(df)
+```
+
+**3) Summary of the Data**
+```{r}
+summary(df)
+```
+
+**4) Load Libraries**
+```{r}
+library(tidyverse)
+library(here)
+library(dplyr)
+library(tidyverse)
+library(ggplot2)
+library(gridExtra)
+library(gganimate)
+library(scales)
+library(ggridges)
+```
+
+
+
+## Exercise 1
+
+<style>
+div.SteelBlue { background-color:#4682B4; border-radius: 5px; padding: 20px;}
+</style>
+<div class = "SteelBlue">
+
+**1) Calculate the difference in heights pre and post evolution and save this as a new variable. Calculate the percentage of Pokémon that grew during evolution. Also visualize the distribution of change in height by species and provide a discussion of how change in height varies across species.**
+
+</div>
+
+*************************************************************************************************************
+
+```{r}
+df$diff_height <- df$height_new - df$height
+df$diff_height_percent <- ((df$height_new - df$height)/df$height_new) * 100
+```
+
+*************************************************************************************************************
+
+```{r}
+a <- ggplot(df, aes(x=diff_height))
+
+a + geom_density(aes(fill = species), alpha = 0.5) +
+  ggtitle("Distribution of Height across species") + 
+  labs(x = "Height Difference",  y = "Frequency") + theme(plot.title = element_text (hjust = 0.5))
+  
+```
+
+
+<style>
+div.Blue { background-color:#e6f0ff; border-radius: 5px; padding: 10px;}
+</style>
+<div class = "Blue">
+
+It is evident from the graph that there is significant height difference post evolution for "Caterpie" followed by "weedie".<br></br>
+Post evolution, drastic change in height does not hold true for other species.<br></br>
+"Eevee" displays minor change in the height but yet ranks the lowest amongst other species.<br></br>
+
+</div>
+
+
+
+## Exercise 2
+
+<style>
+div.SteelBlue { background-color:#4682B4; border-radius: 5px; padding: 20px;}
+</style>
+<div class = "SteelBlue">
+
+**2) Recreate the following plot.**
+
+<center>
+![](C:\Users\palla\Desktop\DAB501\Assig_3\E2.png)
+</center>
+
+</div>
+
+*************************************************************************************************************
+
+```{r}
+selected_species <- filter(df, species != "Weedle")
+
+ggplot(data=selected_species,aes(y=species)) +
+geom_histogram(selected_species,mapping=aes(y=species,fill= attack_weak), stat= "count", position = 'dodge')+
+ggtitle("Pre-Evolution weaker attack of the pokemon by species") + 
+labs(x = "Frequency",  y = "Species", fill = "Attack Weak") + theme(plot.title = element_text (hjust = 0.5)) +theme_bw()
+
+```
+
+
+
+## Exercise 3
+
+<style>
+div.SteelBlue { background-color:#4682B4; border-radius: 5px; padding: 20px;}
+</style>
+<div class = "SteelBlue">
+
+**3) Pick two categorical variables and make a bar plot that depicts the relationship between them. These can be variables from the original data or ones that you create based on the given data.**
+
+</div>
+
+*************************************************************************************************************
+
+
+```{r}
+
+ 
+ggplot(df,aes(x= factor(species),fill = factor(attack_weak))) +
+  geom_bar(position = "fill") +
+  scale_y_continuous(breaks = seq(0, 1, .2), 
+                     label = percent) +
+  scale_fill_brewer(palette = "Set2") +
+  labs(y = "Percent", 
+       fill = "Weakest Attack",
+       x = "Species",
+       title = "Species VS Weak Attack") +
+  theme_minimal() +theme(plot.title = element_text (hjust = 0.5))
+
+
+```
+
+
+
+
+## Exercise 4
+
+<style>
+div.SteelBlue { background-color:#4682B4; border-radius: 5px; padding: 20px;}
+</style>
+<div class = "SteelBlue">
+
+**4) Pick a numerical and a categorical variable, and construct side-by-side box plots depicting the relationship between them.**
+
+</div>
+
+*************************************************************************************************************
+
+```{r}
+ggplot(data=df, aes(x=species, y= cp_new, fill= species))+
+  geom_boxplot() +
+  transition_states( species,
+    wrap= FALSE
+  ) +
+  shadow_mark() +
+  enter_grow() + 
+  ggtitle("Combat Power Post Evolution") + 
+labs(x = "Species", y = "New Combat Power") + theme_minimal() +theme(plot.title = element_text (hjust = 0.5)) 
+  
+
+```
+
+
+
+## Exercise 5
+
+
+<style>
+div.SteelBlue { background-color:#4682B4; border-radius: 5px; padding: 10px;}
+</style>
+<div class = "SteelBlue">
+
+**5) Learn something new: violin plots! Read about them at http://ggplot2.tidyverse.org/reference/geom_violin.html, and convert your side-by-side box plots from the previous task to violin plots. What do the violin plots reveal that box plots do not? What features are apparent in the box plots but not in the violin plots?**
+
+</div>
+
+
+*************************************************************************************************************
+
+```{r}
+ggplot(data= df, aes(x=species, y= cp_new))+
+  geom_violin(aes(fill = species))+
+  ggtitle("Combat Power Post Evolution") + 
+labs(x = "Species", y = "New Combat Power") + theme_minimal()+ theme(plot.title = element_text (hjust = 0.5)) 
+  
+```
+
+
+
+
+<style>
+div.Blue { background-color:#e6f0ff; border-radius: 5px; padding: 10px;}
+</style>
+<div class = "Blue">
+
+Box plot reveals specific information like interquartile ranges, mean/median of the variables in dataset.<br></br>
+Box plot as a whole indicates the summary of the data and they are accurate for smaller datasets.<br></br>
+However, at times mean and median are not enough to understand a dataset and we need to understand the distibution.<br></br>
+Violin plots are popularily preferred for larger datasets as they show density of data at different values.
+Violin plots just like box plots reveals the mean/median, interquratile range and also helps plot kernal density showing the peaks in the data.<br></br>
+
+</div>
+
+
+
+## Exercise 6
+
+<style>
+div.SteelBlue { background-color:#4682B4; border-radius: 5px; padding: 20px;}
+</style>
+<div class = "SteelBlue">
+
+**6) What characteristics correspond to an evolved Pokémon with a high combat power? You do not need to come up with an exhaustive list, but you should walk us through your reasoning for answering this question and include all relevant summary statistics and visualizations.**
+
+</div>
+
+*************************************************************************************************************
+
+<font size = "3">
+**1) Change in various characteristics**
+</font>
+
+
+```{r}
+df %>% 
+  group_by(species) %>%
+   summarise(
+          avg_cp= mean(cp),
+          avg_cp_new= mean(cp_new),
+          avg_height_new = mean(height_new),
+          avg_weight_new = mean(weight_new),
+          avg_hp_new = mean(hp_new),
+          avg_power_new = mean(power_up_stardust_new)) %>%
+   gather(`avg_cp`,`avg_cp_new`,`avg_height_new`,`avg_weight_new`,`avg_hp_new`,`avg_power_new` ,key="attribute", value="value") %>%
+  ggplot() +
+      geom_col(aes(x=species, fill=attribute, y=value), position='dodge', width=0.5)+
+  ggtitle("Post Evolution Change in various attributes per species") + 
+  labs(x = "Species", y = "Value", fill="Attributes") + theme(plot.title = element_text (hjust = 0.5))
+
+```
+
+<style>
+div.Blue { background-color:#e6f0ff; border-radius: 5px; padding: 10px;}
+</style>
+<div class = "Blue">
+
+The above graph depicts the average of emminent characteristics with respect to each species.<br></br>
+We can see the weight and the height post evolution have not had any significant change it is almost equivalent as before.<br></br>
+There is slight increase in hit points for some specific species.<br></br>
+However, the power up stardust seems to have significantly improved.<br></br>
+
+
+</div>
+
+
+*************************************************************************************************************
+
+<font size = "3">
+**2) Zooming into Powerdust analysis**
+</font>
+
+
+
+```{r}
+ggplot() + 
+  geom_line(data=df, aes(x=cp_new, y = power_up_stardust), color = "red", size=1.5) + 
+  geom_line(data=df, aes(x=cp_new, y = power_up_stardust_new), color="Blue", linetype="dashed", size=1.5) +
+  facet_wrap(~species, nrow=2,ncol=2) +
+  labs(x= "Post evolution Combat Power", y = "Stardust(Pre-evolution & Post-evolution)")
+
+```
+<style>
+div.Blue { background-color:#e6f0ff; border-radius: 5px; padding: 10px;}
+</style>
+<div class = "Blue">
+
+To further understand the massive increase in power dust,the facet shows us the comparison of power dust values before and after the evolution.<br></br>
+The red line shows the old value and the blue line shows the new value.<br></br>
+
+</div>
+
+
+
+
+*************************************************************************************************************
+
+<font size = "3">
+**3) Change in Strong attack values**
+</font>
+
+
+
+```{r}
+ggplot(df, 
+       aes(x = attack_strong_value, 
+           y = species, 
+           fill = attack_strong_value)) +
+  geom_density_ridges() + 
+  theme_ridges() +
+  labs("Highway mileage by auto class") +
+  theme(legend.position = "none")+
+  labs(title = "Pre Evolution : Strong attack values per species",
+       x = "Strong Attack Values",
+       y = "Species", fill = "Strong Values")+
+  theme_minimal()+ theme(plot.title = element_text (hjust = 0.5))
+
+```
+
+
+<style>
+div.Blue { background-color:#e6f0ff; border-radius: 5px; padding: 10px;}
+</style>
+<div class = "Blue">
+
+It is most important to understand the change in strong attack values. The graph above shows the attack values before the evolution.<br></br>
+**Weedie** and **caterpie** poesses the highest attack values.<br></br>
+
+</div>
+
+
+
+*************************************************************************************************************
+
+
+
+```{r}
+ggplot(df, 
+       aes(x = attack_strong_value_new, 
+           y = species, 
+           fill = attack_strong_value_new)) +
+  geom_density_ridges() + 
+  theme_ridges() +
+  theme(legend.position = "none") +
+  labs(title = "Post Evolution : Strong attack values per species",
+       x = "Strong Attack Values",
+       y = "Species", fill = "Strong Values")+
+  theme_minimal()+ theme(plot.title = element_text (hjust = 0.5))
+```
+
+<style>
+div.Blue { background-color:#e6f0ff; border-radius: 5px; padding: 10px;}
+</style>
+<div class = "Blue">
+
+Post evolution: we do not witness much change in the attack values.<br></br>
+Inspite of highest power dust values, the strong attack values seems to have increased slightly.<br></br>
+
+
+</div>
+
+

@@ -1,0 +1,178 @@
+---
+title: "DAB 501 : Assignment 2 "
+output:
+  html_document: default
+  pdf_document: default
+---
+
+*************************************************************************************************************
+*************************************************************************************************************
+# Pallavi Ravikumar Menon (W0773763)  {.tabset}
+
+## About the Dataset
+```
+I have used the following dataset among  the three dataset I submitted for Assignment-1.
+```
+
+**Attribution of Owner:**<br></br> 
+1) Ruchi Bhatia
+
+**Dataset Source : **<br></br> 
+  https://www.kaggle.com/ruchi798/movies-on-netflix-prime-video-hulu-and-disney
+     
+**Description:**<br></br> 
+<style>
+div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 20px;}
+</style>
+<div class = "blue">
+
+The dataset consists comprehensive list of movies available on various OTT platforms along with IMDb rating from year (1902- 2020). It is really interesting as lot of data analytics can be performed on the datasets to understand “which streaming platform(s) a particular movie can be streamed?” as well as “ Average IMDb rating of movies country wise?"
+
+</div>
+
+<font size = "2">
+
+Variable        |   Variable Types
+----------------|---------------------
+Title           |     Character  
+Year            |     integer 
+Age             |     Integer
+IMDb            |     Numeric
+Rotten Tomatoes |     Numeric
+Netflix         |     Integer
+Hulu            |     Integer
+prime Video     |     Integer
+Disney +        |     Integer
+Directors       |     Character
+Genres          |     Character
+Country         |     Character
+Language        |     Character
+Runtime         |     Interger
+
+
+</font>
+
+**Read & Assign Variable to the Dataset**
+
+```{r}
+Movies <- read.csv("Movies.csv")
+```
+
+</font>
+
+*************************************************************************************************************
+## Question 1
+
+<center>
+![](C:\Users\palla\Desktop\DAB501\Data\A2_Q1.png)
+
+</center>
+
+As I have assigned variable to the dataset, I will perform the functions by calling the variable name.
+
+
+**head() function**
+```{r}
+head(Movies)
+```
+
+
+**tail() function**
+```{r}
+tail(Movies)
+```
+
+
+**summary() function**
+```{r}
+summary(Movies)
+```
+
+
+
+*************************************************************************************************************
+## Question 2
+<center>
+![](C:\Users\palla\Desktop\DAB501\Data\A2_Q2.png)
+
+*************************************************************************************************************
+
+
+![](C:\Users\palla\Desktop\DAB501\Data\Obj.png)
+</center>
+
+*************************************************************************************************************
+
+<font size = "4">
+**Load Package**
+</font>
+```{r}
+library(dplyr)
+```
+
+*************************************************************************************************************
+
+
+<font size = "4">
+**Exploratory Question: 1**
+</font>
+
+<style>
+div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 20px;}
+</style>
+<div class = "blue">
+
+Other OTT Platforms are wanting to compete the market leaders like Netflix and Prime Video in order to gain more subscribers. They have asked me to analyze the data set and chart out the last five years movies that are highly rated and available on both the platforms. 
+
+</div>
+
+*************************************************************************************************************
+
+```{r}
+Movies %>%
+  group_by(Year) %>%
+  filter(Year >= '2017' & IMDb >= '8' , Netflix == '1' | Prime.Video == '1') %>%
+  mutate(Target_Movies = Title)
+  
+```
+<font size = "4">
+**After analysing the results they now know the 97 movies whose censorship right can be acquired after speaking to the respective production houses.**
+</font>
+
+
+
+*************************************************************************************************************
+
+<font size = "4">
+**Exploratory Question: 2**
+</font>
+
+
+<style>
+div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 20px;}
+</style>
+<div class = "blue">
+
+After a successful theater release of their movie worldwide,a newly based movie production house are wanting to explore their movie releases on Online platforms as well.As suggested by their marketing head they are wanting to launch their movies on online platforms in order to keep up with the trend. The next movie " Dark Run " is a thriller centric film. So they are willing to know the runtime and rating of this particular genre.
+
+</div>
+
+*************************************************************************************************************
+
+```{r}
+Movies %>%
+  group_by(Genres,Title) %>%
+  filter(Genres =='Thriller') %>%
+  summarise(Avg_Runtime = mean(Runtime),
+            Avg_IMDb = mean(IMDb)) %>%
+  mutate(rank = rank((Avg_IMDb)))
+  
+```
+
+<font size = "4">
+**The output reveals the average IMDb, average runtime and even the ranking. After analysing the output it is not advisable for the production house to launch thriller based movies on OTT Platform.**
+</font>
+
+
+*************************************************************************************************************
+*************************************************************************************************************

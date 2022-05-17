@@ -1,0 +1,259 @@
+---
+title: "Assign_1 Pallavi Ravikumar Menon (W0773763)"
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+---
+
+*************************************************************************************************************
+*************************************************************************************************************
+
+
+![](C:\Users\palla\Desktop\Ques1.png)
+
+<font size = "4">
+1)**Dataset 1 :**
+  Source: https://www.kaggle.com/unsdsn/world-happiness
+  
+  **Description:**
+<font size = "3">
+**
+The world happiness dataset signifies the level of happiness across the globe. The data is framed and recorded strictly considering each country’s government and their respective policies withholding the happiness parameters. Highlighting with expertise of leading economists, psychologists, survey analysts and other health governing bodies, the dataset was drafted effectively to assess the progress of nations.
+**
+</font>
+```
+  Variable        |   Variable Types
+----------------- |---------------------
+Country           |     Character  
+Region            |     Character 
+Happiness Rank    |     Integer
+Happiness Score   |     Numeric
+Standard Error    |     Numeric
+GDP               |     Numeric
+Family            |     Numeric
+Health            |     Numeric
+Freedom           |     Numeric
+Trust             |     Numeric
+Generosity        |     Numeric
+Dystopia Residual |     Numeric
+
+```
+</font>  
+
+
+<font size = "4">
+2)**Dataset 2 :**
+    Source: https://www.kaggle.com/ruchi798/movies-on-netflix-prime-video-hulu-and-disney
+    
+  **Description:**
+<font size = "3">
+**
+The dataset consists comprehensive list of movies available on various OTT platforms along with IMDb rating from year (1902- 2020). It is really interesting as lot of data analytics can be performed on the datasets to understand “which streaming platform(s) a particular movie can be streamed?” as well as “ Average IMDb rating of movies country wise?”
+**
+</font>
+```
+Variable        |   Variable Types
+----------------|---------------------
+Title           |     Character  
+Year            |     integer 
+Age             |     Integer
+IMDb            |     Numeric
+Rotten Tomatoes |     Numeric
+Netflix         |     Integer
+Hulu            |     Integer
+prime Video     |     Integer
+Disney +        |     Integer
+Directors       |     Character
+Genres          |     Character
+Country         |     Character
+Language        |     Character
+Runtime         |     Interger
+```
+</font>
+
+
+<font size = "4">
+3) **Dataset 3: **
+     Source: https://www.kaggle.com/uciml/pima-indians-diabetes-database
+     
+ **Description:**
+<font size = "3">
+**
+The dataset put up by National Institute of Diabetes and Digestive and Kidney Diseases displays various parameters in order to predict chances of diabetes among females from 21 years or older belonging to Pima Indian Heritage. 
+**
+</font>
+```
+Variable                   |   Variable Types
+---------------------------|---------------------
+Pregnancies                |     Integer  
+Glucose                    |     Integer 
+Blood Pressure             |     Integer
+Skin thickness             |     Integer
+Insulin                    |     Integer
+BMI                        |     Numeric
+Diabetes Pedigree Function |     Numeric
+Age                        |     Integer
+Outcome                    |     Integer
+
+```
+</font>
+
+
+
+*************************************************************************************************************
+*************************************************************************************************************
+
+
+![](C:\Users\palla\Desktop\Ques2.png)
+
+
+
+![](C:\Users\palla\Desktop\Good.png)
+
+
+
+<font size = "4">
+**I consider this good representation because of following reasons:**
+```
+i) The visualization is precise and intuitive for a novice having no prior knowledge of deriving conclusions from a graph.
+ii) Also, the feature enabling to view data for particular year is displayed making it data driven graphical representation.
+iii) Mutual color denoting “Baby Boomers” conveys group of people born post world war II in an era of increase in the birth rate. Overall, the colors used for indicating genders gives it a more readable and understandable approach.
+
+```
+Source : https://worldbestnews.info/the-power-of-data-visualization-plus-examples-of-good-and-bad-visuals/
+</font>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+*************************************************************************************************************
+*************************************************************************************************************
+
+
+![](C:\Users\palla\Desktop\Ques3.png)
+
+
+
+![](C:\Users\palla\Desktop\Bad.png)
+
+
+<font size = "4">
+**I consider this bad representation because of following reasons:**
+```
+1)	The haphazard approach of implementation of this dataset seems like a vague attempt of complicating it more rather than simplifying it.
+2)	The idea of this data is to derive a simplistic relation between the author and the genres of novel written by them. Instead of keeping a primary centric approach (i.e.Author with respect to genres or vice versa), the creator landed up muddling the entire data.
+3)	The overuse of colors has contributed equally to the above-mentioned pointers.
+
+```
+Source : http://bloggotype.blogspot.com/2012/04/mapping-popular-story-plot-lines.html
+</font>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+*************************************************************************************************************
+*************************************************************************************************************
+
+
+![](C:\Users\palla\Desktop\Ques4.png)
+
+
+
+<font size = "4">
+```{r}
+library(tidyverse)
+library(here)
+library(ggplot2)
+library(gapminder)
+gapminder::gapminder
+
+```
+
+
+*************************************************************************************************************
+
+
+```{r}
+ggplot(data = gapminder::gapminder) +
+  geom_point(mapping= aes(x=year,y= lifeExp), color = "orange")
+```
+
+
+<font size ="4">
+**
+The world has witnessed a uniform and constant growth in terms of Life Expectancy. With evolving lifestyle and advances  in medical sciences, we observe a constant boosting our life tenure.
+**
+</font>
+
+
+*************************************************************************************************************
+
+
+```{r}
+ggplot(data = gapminder::gapminder) +
+  geom_line(mapping= aes(x=year,y= pop), color = "blue")
+```
+
+
+<font size ="4">
+**
+We can infer from the above observation that Population is directly proportional to the life expectancy.
+Thus we can conclude from the graphical representation that world has indded become a better place. 
+**
+</font>
+
+
+*************************************************************************************************************
+*************************************************************************************************************
+</font>
+
+
+
+
+
+
+
+
+
+
+
